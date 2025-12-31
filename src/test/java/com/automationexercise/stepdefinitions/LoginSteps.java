@@ -1,0 +1,64 @@
+package com.automationexercise.stepdefinitions;
+
+import com.automationexercise.hooks.Hooks;
+import com.automationexercise.pages.LoginPage;
+
+import io.cucumber.java.en.*;
+
+public class LoginSteps {
+
+	
+	/*
+	 * LoginSteps needs to use LoginPage
+	 * This variable will hold a reference to the page object
+	 */
+	LoginPage loginpage;
+	
+	@Given("user navigates to login page")
+	public void user_navigates_to_login_page() 
+	{
+		// Hooks.driver -> This is the same browser session which is already created in @Before hook
+		// new LoginPage(Hooks.driver) -> Creating a LoginPage object and passing the browser into it
+		loginpage = new LoginPage(Hooks.driver);  
+		loginpage.navigateToLoginPage();
+	}
+	
+	@When ("user enters valid email and password")
+	public void user_enters_valid_email_and_password() 
+	{
+		loginpage.enterEmail("wabebe6908@hudisk.com");
+		loginpage.enterPassword("test");	
+		
+	}
+	
+	@When ("user enters invalid email and password")
+	public void user_enters_invalid_email_and_password() 
+	{
+		loginpage.enterEmail("invalid@test.com");
+		loginpage.enterPassword("wrong123");
+	}
+	
+	@Then ("clicks on login button")
+	public void clicks_on_login_button() 
+	{
+		loginpage.clickLogin();
+	}
+	
+	@Then("user should be logged in successfully")
+	public void user_should_be_logged_in_successfully() {
+	    // We will implement success validation next
+	}
+	
+	@Then("user should not be logged in successfully")
+	public void user_should_not_be_logged_in_successfully()
+	{
+		//TODO
+	}
+	
+	@Then ("error message should be displayed")
+	public void error_message_should_be_displayed() 
+	{
+	
+	}
+	
+}

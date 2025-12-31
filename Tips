@@ -1,0 +1,128 @@
+Framework Design Diagram:
+
+automation-framework
+ ├── pom.xml
+ └── src
+     ├── main
+     │   └── java
+     │       └── com.automationexercise
+     │           ├── base
+     │           ├── pages
+     │           ├── utils
+     │           └── config
+     └── test
+         ├── java
+         │   └── com.automationexercise
+         │       ├── runners
+         │       ├── stepdefinitions
+         │       └── hooks
+         └── resources
+             └── features
+
+             
+WHY this structure?
+
+pages → Page Object Model, application behavior
+stepdefinitions → glue between Gherkin & code, test logic
+runners → test execution control
+hooks → setup/teardown
+utils → reusable helpers
+features → business-readable tests
+
+
+Feature file:
+“Step definition classes don’t have a main method because execution is controlled by the Cucumber runner. Cucumber invokes step methods based on matching Gherkin steps during test execution.”
+
+In a Cucumber framework:
+You never start LoginSteps directly
+It is NOT an entry point
+It is just a listener / handler for steps written in .feature files
+
+
+Do function names have to be the same as feature file steps?
+NO. Function (method) names do NOT have to match feature file text.
+Eg: Following is perfectly valid.
+Feature file: Then user should not be logged in successfully
+Step definition: @Then("user should not be logged in successfully")
+public void verify_login_failure() {
+    // code
+}
+
+1) Cucumber matches feature steps with the annotation text, not the method name. Method names are for developer readability and can be chosen freely
+2) Cucumber matches the exact step text inside the annotation quotes with the step line in the feature file.
+
+Page Object Classes:
+Page Object classes don’t have a main method because they are not entry points. They encapsulate UI interactions and are invoked by step definition classes during test execution.”
+
+
+Hooks:
+We need hooks because:
+Browser setup should happen before every scenario
+Browser cleanup should happen after every scenario
+This should NOT be repeated in every step
+
+
+When you Run → TestRunner.java then execution flow is:
+TestRunner
+   ↓
+Cucumber
+   ↓
+Hooks (@Before)
+   ↓
+WebDriver created
+   ↓
+Step Definitions
+   ↓
+LoginPage methods
+   ↓
+Hooks (@After)
+   ↓
+Browser closed
+
+
+JUnit starts
+   ↓
+@RunWith(Cucumber.class)
+   ↓
+Cucumber reads @CucumberOptions
+   ↓
+Reads feature files
+   ↓
+Finds step definitions
+   ↓
+Runs @Before hooks → browser opens
+   ↓
+Executes steps
+   ↓
+Runs @After hooks → browser closes
+
+
+Think of:
+Run As → JUnit Test = Run this file now
+Run As → Runner (JUnit Test) = Run the saved JUnit setup again
+
+Explicit Wait:
+
+Why do we need explicit waits?
+because in real projects:
+Elements load late
+Network is slow
+CI machines are slower
+
+Without waits, we’ll see:
+❌ NoSuchElementException
+❌ ElementNotInteractableException
+❌ Flaky tests (pass locally, fail in CI)
+
+Where SHOULD waits live? 
+NOT in Step Definitions, NOT in Hooks
+It should in Page Objects -> Reason: Page Objects own UI behavior
+
+How do you handle synchronization?
+I use explicit waits inside Page Object methods, waiting for specific conditions like visibility or clickability instead of relying on implicit waits or thread sleeps.”
+
+
+
+CI:
+Where do you configure headless execution?
+Inside the Cucumber @Before hook where WebDriver is initialized, using browser options.”
