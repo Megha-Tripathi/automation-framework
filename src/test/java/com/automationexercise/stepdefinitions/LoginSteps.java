@@ -1,5 +1,6 @@
 package com.automationexercise.stepdefinitions;
 
+import static org.testng.AssertJUnit.assertTrue;
 import com.automationexercise.hooks.Hooks;
 import com.automationexercise.pages.LoginPage;
 
@@ -23,20 +24,21 @@ public class LoginSteps {
 		loginpage.navigateToLoginPage();
 	}
 	
-	@When ("user enters valid email and password")
-	public void user_enters_valid_email_and_password() 
+	@When ("user enters email {string} and password {string}")
+	public void user_enter_email_and_password(String email, String password) 
 	{
-		loginpage.enterEmail("wabebe6908@hudisk.com");
-		loginpage.enterPassword("test");	
+		loginpage.enterEmail(email);
+		loginpage.enterPassword(password);	
 		
 	}
 	
-	@When ("user enters invalid email and password")
+	/*@When ("user enters invalid email and password")
 	public void user_enters_invalid_email_and_password() 
 	{
 		loginpage.enterEmail("invalid@test.com");
 		loginpage.enterPassword("wrong123");
 	}
+	*/
 	
 	@Then ("clicks on login button")
 	public void clicks_on_login_button() 
@@ -44,9 +46,17 @@ public class LoginSteps {
 		loginpage.clickLogin();
 	}
 	
-	@Then("user should be logged in successfully")
-	public void user_should_be_logged_in_successfully() {
-	    // We will implement success validation next
+	@Then("login result should be {string}")
+	public void login_result_should_be(String result) 
+	{
+	    if(result.equalsIgnoreCase("success"))
+	    {
+	    	assertTrue("Expected login to succeed",loginpage.isLoginSuccessful());
+	    }
+	    else if(result.equalsIgnoreCase("failure"))
+	    {
+	    	assertTrue("Expected login to fail",loginpage.isErrorMessageDisplayed());
+	    }
 	}
 	
 	@Then("user should not be logged in successfully")

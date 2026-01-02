@@ -125,4 +125,9 @@ I use explicit waits inside Page Object methods, waiting for specific conditions
 
 CI:
 Where do you configure headless execution?
-Inside the Cucumber @Before hook where WebDriver is initialized, using browser options.”
+Inside the Cucumber @Before hook where WebDriver is initialized, using browser options.
+
+
+
+How do you make login tests data-driven in Cucumber?
+By using Scenario Outline with Examples tables and parameterized step definitions, allowing the same scenario to run with multiple credential sets.
