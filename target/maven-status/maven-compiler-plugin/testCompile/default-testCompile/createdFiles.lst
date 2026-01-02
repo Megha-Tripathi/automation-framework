@@ -1,0 +1,3 @@
+com\automationexercise\stepdefinitions\LoginSteps.class
+com\automationexercise\runners\TestRunner.class
+com\automationexercise\hooks\Hooks.class

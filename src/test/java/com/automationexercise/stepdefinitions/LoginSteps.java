@@ -1,6 +1,7 @@
 package com.automationexercise.stepdefinitions;
 
-import static org.testng.AssertJUnit.assertTrue;
+//import static org.testng.AssertJUnit.assertTrue;
+import static org.junit.Assert.assertTrue;
 import com.automationexercise.hooks.Hooks;
 import com.automationexercise.pages.LoginPage;
 
